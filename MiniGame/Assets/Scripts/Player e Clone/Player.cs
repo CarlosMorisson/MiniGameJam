@@ -4,20 +4,23 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("Sexo")]
+    [Header("Player")]
     public float speed;
     [Tooltip("Genilson")]
     public float jumpForce;
     [HideInInspector]
     public Rigidbody2D rig;
-    [SerializeField] private GameObject rastro;
-    private bool startCount=true;
-    [SerializeField] float coolDown;
-    [SerializeField] float coolDownTotal;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
     public Transform groundCheck;
     private bool isGrounded;
+    [Header ("Skill De Voltar No Tempo")]
+    [SerializeField] private GameObject rastro;
+    private bool startCount=true;
+    [SerializeField] float coolDown;
+    [SerializeField] float coolDownTotal;
+    [Header ("Skill De Parar O Tempo")]
+    
     private bool Returned;
 public virtual void Start()
     {
