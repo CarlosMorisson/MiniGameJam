@@ -10,6 +10,7 @@ public class StopTime : MonoBehaviour
     public Image FreezeTimeImage;
     [SerializeField]
     Image FreezeTimeBar;
+
     private void Start()
     {
         instance = this;
@@ -22,6 +23,10 @@ public class StopTime : MonoBehaviour
     public void UpdateBar(float freezeTimeCoolDown, float maxFreezeTime)
     {
         FreezeTimeBar.fillAmount = freezeTimeCoolDown / maxFreezeTime;
+        
+    }
+    private void Update()
+    {
         
     }
 }
