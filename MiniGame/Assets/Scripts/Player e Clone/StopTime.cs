@@ -1,18 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class StopTime : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static StopTime instance;
+    public bool stopTime;
+    [SerializeField]
+    public Image FreezeTimeImage;
+    [SerializeField]
+    Image FreezeTimeBar;
+    private void Start()
     {
-        
+        instance = this;
     }
-
-    // Update is called once per frame
-    void Update()
+    public void Stop()
     {
+        stopTime = true;
+        FreezeTimeImage.gameObject.SetActive(true);
+    }
+    public void UpdateBar(float freezeTimeCoolDown, float maxFreezeTime)
+    {
+        FreezeTimeBar.fillAmount = freezeTimeCoolDown / maxFreezeTime;
         
     }
 }

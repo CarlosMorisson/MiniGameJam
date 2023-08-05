@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
+    public static Player instance;
     [Header("Player")]
     public float speed;
     [Tooltip("Genilson")]
@@ -17,15 +18,20 @@ public class Player : MonoBehaviour
     [Header ("Skill De Voltar No Tempo")]
     [SerializeField] private GameObject rastro;
     private bool startCount=true;
-    [SerializeField] float coolDown;
-    [SerializeField] float coolDownTotal;
-    [Header ("Skill De Parar O Tempo")]
-    
     private bool Returned;
-public virtual void Start()
+    [SerializeField] Image coolDownBar;
+    [SerializeField] float coolDownShadow;
+    [SerializeField] float coolDownTotalShadow;
+    [Header ("Skill De Parar O Tempo")]
+    [SerializeField] float coolDownFreezeTime;
+    [SerializeField] float coolDownTotalFreezeTime;
+    private bool startCountFreeze;
+    public virtual void Start()
     {
+        instance = this;
         rig = GetComponent<Rigidbody2D>();
-        coolDown = coolDownTotal;
+        coolDownShadow = coolDownTotalShadow;
+        coolDownFreezeTime = coolDownTotalFreezeTime;
     }
     private void Update()
     {
@@ -38,8 +44,48 @@ public virtual void Start()
         }
         ChangeLocal();
         Move();
+        FreezeTime();
     }
+    private void FreezeTime()
+    {
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            
+            if(StopTime.instance.stopTime==false)
+            {
+                coolDownFreezeTime = 0;
+                StopTime.instance.Stop();
+                StopTime.instance.UpdateBar(coolDownFreezeTime, coolDownTotalFreezeTime);
+                startCountFreeze = true;
+            }
+            else
+            {
+                StopTime.instance.stopTime = false;
+                StopTime.instance.FreezeTimeImage.gameObject.SetActive(false);
+                CountFreezeCoolDown();
+                startCountFreeze = true;
+            }
+        }
+        if (startCountFreeze)
+        {
+            CountFreezeCoolDown();
+        }
+    }
+    private void CountFreezeCoolDown()
+    {
+        if (coolDownFreezeTime < coolDownTotalFreezeTime)
+        {
+            coolDownFreezeTime += Time.deltaTime;
+            StopTime.instance.UpdateBar(coolDownFreezeTime, coolDownTotalFreezeTime);
+        }
+        else
+        {
+            startCountFreeze = false;
+            StopTime.instance.stopTime = false;
+            StopTime.instance.FreezeTimeImage.gameObject.SetActive(false);
+        }
 
+    }
     private void Jump()
     {
         rig.velocity = new Vector2(rig.velocity.x, jumpForce);
@@ -47,24 +93,21 @@ public virtual void Start()
     }
     private void ChangeLocal()
     {
-        if (Input.GetKey(KeyCode.Q) && coolDown>= coolDownTotal)
+        if (Input.GetKey(KeyCode.Q) && coolDownShadow>= coolDownTotalShadow)
         {
-            coolDown = 0;
+            coolDownShadow = 0;
             this.transform.localPosition = rastro.transform.localPosition;
             PlayerTemp.instance.playerPositions.Clear();
             rastro.gameObject.SetActive(false);
             Returned = true;
             startCount = true;
         }
-        else{
-            
-            
-        }
         if (startCount)
         {
-            if(coolDown < coolDownTotal)
+            if(coolDownShadow < coolDownTotalShadow)
             {
-                coolDown += Time.deltaTime;
+                coolDownShadow += Time.deltaTime;
+                coolDownBar.fillAmount = coolDownShadow / coolDownTotalShadow;
             }
             else
             {
