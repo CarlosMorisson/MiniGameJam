@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     [SerializeField] float coolDownFreezeTime;
     [SerializeField] float coolDownTotalFreezeTime;
     private bool startCountFreeze;
+
+    public Animator anim;
     public virtual void Start()
     {
         instance = this;
@@ -125,12 +127,16 @@ public class Player : MonoBehaviour
     public void Move()
     {
         float movement = Input.GetAxis("Horizontal");
+        
         rig.velocity = new Vector2(movement * speed, rig.velocity.y);
+
+        anim.SetBool("Run", movement != 0);
+
         if (movement > 0)
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
         }
-        else if (movement < 0) ;
+        else if (movement < 0)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
         }
