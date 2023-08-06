@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public static Player instance;
@@ -21,12 +22,13 @@ public class Player : MonoBehaviour
     private bool Returned;
     [SerializeField] Image coolDownBar;
     [SerializeField] float coolDownShadow;
+    public AudioSource SoundEffect;
     [SerializeField] float coolDownTotalShadow;
     [Header ("Skill De Parar O Tempo")]
     [SerializeField] float coolDownFreezeTime;
     [SerializeField] float coolDownTotalFreezeTime;
     private bool startCountFreeze;
-
+    private ParticleSystem particle;
     public Animator anim;
     public virtual void Start()
     {
@@ -34,6 +36,7 @@ public class Player : MonoBehaviour
         rig = GetComponent<Rigidbody2D>();
         coolDownShadow = coolDownTotalShadow;
         coolDownFreezeTime = coolDownTotalFreezeTime;
+        particle = GetComponentInChildren<ParticleSystem>();
     }
     private void Update()
     {
@@ -88,6 +91,13 @@ public class Player : MonoBehaviour
         }
 
     }
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("PlataformDestroyer"))
+        {
+            SceneManager.LoadScene("SampleScene");
+        }
+    }
     private void Jump()
     {
         rig.velocity = new Vector2(rig.velocity.x, jumpForce);
@@ -103,6 +113,8 @@ public class Player : MonoBehaviour
             rastro.gameObject.SetActive(false);
             Returned = true;
             startCount = true;
+            particle.Play();
+            SoundEffect.Play();
         }
         if (startCount)
         {

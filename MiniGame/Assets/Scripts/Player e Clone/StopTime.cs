@@ -10,7 +10,7 @@ public class StopTime : MonoBehaviour
     public Image FreezeTimeImage;
     [SerializeField]
     Image FreezeTimeBar;
-
+    public AudioSource SoundaEffect;
     private void Start()
     {
         instance = this;
@@ -19,6 +19,7 @@ public class StopTime : MonoBehaviour
     {
         stopTime = true;
         FreezeTimeImage.gameObject.SetActive(true);
+        SoundaEffect.Play();
     }
     public void UpdateBar(float freezeTimeCoolDown, float maxFreezeTime)
     {
